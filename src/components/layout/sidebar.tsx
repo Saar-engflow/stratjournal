@@ -25,6 +25,11 @@ const navItems = [
   { href: "/notebook", label: "Notebook", icon: FileText },
 ]
 
+/**
+ * Renders a responsive, collapsible sidebar with navigation links.
+ *
+ * The sidebar displays navigation items, highlights the active route, and supports toggling between collapsed (icon-only) and expanded (with labels) states. It includes a theme toggle at the bottom and is hidden on mobile screens.
+ */
 export function Sidebar() {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(false)

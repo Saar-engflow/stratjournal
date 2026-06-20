@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   description: "Trading journal and strategy manager",
 };
 
+/**
+ * Root layout component that wraps the application with theme provider.
+ *
+ * @returns The rendered HTML structure with theme provider.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{

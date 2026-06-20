@@ -13,6 +13,9 @@ const navItems = [
   { href: "/playbooks", label: "More", icon: MoreHorizontal }, // Overflow menu
 ]
 
+/**
+ * Renders a fixed bottom navigation bar for mobile devices with active route highlighting.
+ */
 export function BottomNav() {
   const pathname = usePathname()
 
