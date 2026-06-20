@@ -20,7 +20,7 @@ export function BottomNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t bg-card p-2 z-50">
+    <nav aria-label="Mobile navigation" className="md:hidden fixed bottom-0 left-0 right-0 border-t bg-card p-2 z-50">
       <div className="flex justify-around items-center">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (item.href === "/playbooks" && (pathname === "/playbooks" || pathname === "/accounts"))
@@ -29,6 +29,7 @@ export function BottomNav() {
             <Link
               key={item.href}
               href={item.href}
+              aria-current={isActive ? "page" : undefined}
               className={cn(
                 "flex flex-col items-center gap-1 px-2 py-1 rounded-md transition-colors",
                 isActive
