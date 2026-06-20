@@ -1,3 +1,6 @@
+/**
+ * Renders a dashboard page layout.
+ */
 export default function DashboardPage() {
   return (
     <div>

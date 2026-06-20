@@ -2,6 +2,11 @@ import { Sidebar } from "@/components/layout/sidebar"
 import { BottomNav } from "@/components/layout/bottom-nav"
 import { ThemeToggle } from "@/components/theme-toggle"
 
+/**
+ * Provides the top-level application layout.
+ *
+ * Wraps content with a sidebar, bottom navigation, and a mobile-only theme toggle.
+ */
 export default function AppLayout({
   children,
 }: Readonly<{
