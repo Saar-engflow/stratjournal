@@ -41,6 +41,7 @@ export function Sidebar() {
           {!isCollapsed && <h1 className="text-xl font-bold">StratJournal</h1>}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
+            aria-label="Toggle sidebar"
             className="p-2 rounded-md hover:bg-accent transition-colors"
           >
             {isCollapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
@@ -54,6 +55,8 @@ export function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive ? "page" : undefined}
+                aria-label={isCollapsed ? item.label : undefined}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
                   isCollapsed ? "justify-center" : "",
