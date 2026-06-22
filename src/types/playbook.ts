@@ -19,7 +19,7 @@ export type PlaybookListItem = {
 export type PlaybookTradeSummary = {
   id: string
   instrument: string
-  direction: "LONG" | "SHORT"
+  direction: "BUY" | "SELL"
   status: "OPEN" | "CLOSED"
   profitLoss: number | null
   createdAt: Date

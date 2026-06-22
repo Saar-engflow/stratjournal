@@ -46,8 +46,8 @@ enum TradeStatus {
 }
 
 enum TradeDirection {
-  LONG
-  SHORT
+  BUY
+  SELL
 }
 
 model Trade {
@@ -57,9 +57,9 @@ model Trade {
   playbookId String?
   instrument String
   direction  TradeDirection
-  entryPrice Decimal?
-  stopLoss   Decimal?
-  takeProfit Decimal?
+  entryPrice Decimal
+  stopLoss   Decimal
+  takeProfit Decimal
   lotSize    Decimal
   status     TradeStatus    @default(OPEN)
   profitLoss Decimal?
