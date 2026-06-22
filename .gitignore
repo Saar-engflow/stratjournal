@@ -40,7 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Context (AI docs, not tracked)
 /context
-# Old proxy file
-proxy.ts.old

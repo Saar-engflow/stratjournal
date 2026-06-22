@@ -2,19 +2,31 @@
 
 import * as React from "react"
 import { Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
+import { useTheme } from "./theme-provider"
 import { cn } from "@/lib/utils"
 
 /**
  * Renders a button to toggle between dark and light themes.
  */
 export function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
 
   React.useEffect(() => {
     setMounted(true)
   }, [])
+
+  const getResolvedTheme = () => {
+    if (!mounted) return "light"
+    if (theme === "system") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+    }
+    return theme
+  }
+
+  const resolvedTheme = getResolvedTheme()
 
   return (
     <button
