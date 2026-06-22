@@ -37,6 +37,7 @@ export async function getChartData(userId: string) {
     include: {
       account: { select: { id: true, name: true } },
       playbook: { select: { id: true, name: true } },
+    },
   });
 
   return {
