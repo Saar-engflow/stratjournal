@@ -112,8 +112,8 @@ export async function uploadTradeImageForUser(
   if (!tradeNote) {
     tradeNote = await prisma.tradeNote.create({
       data: {
-      tradeId,
-      content: null,
+        tradeId,
+        content: null,
       },
     })
   }
@@ -139,7 +139,7 @@ export async function deleteTradeImageForUser(
   // Get trade and verify ownership and status
   const trade = await prisma.trade.findFirst({
     where: { id: tradeId, userId },
-    include: { note: { include: { images: true } },
+    include: { note: { include: { images: true } } },
   })
 
   if (!trade) {
