@@ -18,7 +18,7 @@ export async function getDashboardMetrics(userId: string) {
   const winRate = closedTrades === 0 ? 0 : (winningTrades / closedTrades) * 100;
   const netProfitLoss = trades
     .filter((t) => t.status === "CLOSED" && t.profitLoss !== null)
-    .reduce((sum, t) => sum + (t.profitLoss as number), 0);
+    .reduce((sum, t) => sum + Number(t.profitLoss), 0);
 
   return {
     totalTrades,
