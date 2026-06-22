@@ -1,5 +1,7 @@
+import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 
 import type { TradeListItem } from "@/types/trade"
 
@@ -57,6 +59,21 @@ export function TradeCard({ trade }: TradeCardProps) {
             <Badge variant="outline">{trade.playbook.name}</Badge>
           </div>
         )}
+        <div className="mt-4 flex gap-2">
+          <Button variant="ghost" size="sm" asChild>
+            <Link href={`/trades/${trade.id}`}>View</Link>
+          </Button>
+          {trade.status === "OPEN" && (
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href={`/trades/${trade.id}/edit`}>Edit</Link>
+              </Button>
+              <Button variant="destructive" size="sm" asChild>
+                <Link href={`/trades/${trade.id}/close`}>Close</Link>
+              </Button>
+            </>
+          )}
+        </div>
       </CardContent>
     </Card>
   )
