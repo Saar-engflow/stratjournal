@@ -15,16 +15,17 @@ export async function getChartData(userId: string) {
 
   let cumulative = 0;
   const performance = closedTrades.map((trade) => {
-    cumulative += trade.profitLoss ?? 0;
+    const profitLoss = Number(trade.profitLoss ?? 0);
+    cumulative += profitLoss;
     return {
       date: trade.closedAt?.toISOString().split("T")[0],
-      profitLoss: trade.profitLoss ?? 0,
+      profitLoss,
       cumulative,
     };
   });
 
-  const wins = closedTrades.filter((t) => t.profitLoss && t.profitLoss > 0).length;
-  const losses = closedTrades.filter((t) => t.profitLoss && t.profitLoss < 0).length;
+  const wins = closedTrades.filter((t) => t.profitLoss && Number(t.profitLoss) > 0).length;
+  const losses = closedTrades.filter((t) => t.profitLoss && Number(t.profitLoss) < 0).length;
   const trend = [
     { name: "Wins", count: wins },
     { name: "Losses", count: losses },
@@ -38,7 +39,12 @@ export async function getChartData(userId: string) {
       account: { select: { id: true, name: true } },
       playbook: { select: { id: true, name: true } },
     },
-  });
+  }).then((trades) =>
+    trades.map((trade) => ({
+      ...trade,
+      profitLoss: trade.profitLoss !== null ? Number(trade.profitLoss) : null,
+    }))
+  );
 
   return {
     performance,
