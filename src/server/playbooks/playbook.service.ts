@@ -28,6 +28,7 @@ export async function listPlaybooksForUser(userId: string): Promise<PlaybookList
     id: playbook.id,
     name: playbook.name,
     description: playbook.description,
+    rules: Array.isArray(playbook.rules) ? playbook.rules as string[] : [],
     createdAt: playbook.createdAt,
     stats: computePlaybookStats(playbook.trades),
   }))
@@ -90,7 +91,7 @@ export async function getPlaybookForUser(
     id: playbook.id,
     name: playbook.name,
     description: playbook.description,
-    rules: playbook.rules,
+    rules: Array.isArray(playbook.rules) ? playbook.rules as string[] : [],
     createdAt: playbook.createdAt,
     updatedAt: playbook.updatedAt,
     stats: computePlaybookStats(allTrades),
@@ -103,13 +104,13 @@ export async function getPlaybookForUser(
  */
 export async function createPlaybookForUser(
   userId: string,
-  data: { name: string; description: string; rules: string }
+  data: { name: string; description?: string | null; rules: string[] }
 ) {
   return prisma.playbook.create({
     data: {
       userId,
       name: data.name,
-      description: data.description,
+      description: data.description || null,
       rules: data.rules,
     },
   })
@@ -121,7 +122,7 @@ export async function createPlaybookForUser(
 export async function updatePlaybookForUser(
   userId: string,
   playbookId: string,
-  data: { name: string; description: string; rules: string }
+  data: { name: string; description?: string | null; rules: string[] }
 ) {
   const existing = await prisma.playbook.findFirst({
     where: { id: playbookId, userId },
@@ -136,7 +137,7 @@ export async function updatePlaybookForUser(
     where: { id: playbookId },
     data: {
       name: data.name,
-      description: data.description,
+      description: data.description || null,
       rules: data.rules,
     },
   })

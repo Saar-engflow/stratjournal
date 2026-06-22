@@ -9,13 +9,12 @@ export const playbookFormSchema = z.object({
   description: z
     .string()
     .trim()
-    .min(10, "Description must be at least 10 characters")
-    .max(500, "Description must be at most 500 characters"),
+    .max(200, "Description must be at most 200 characters")
+    .optional()
+    .or(z.literal("")),
   rules: z
-    .string()
-    .trim()
-    .min(20, "Rules must be at least 20 characters")
-    .max(5000, "Rules must be at most 5000 characters"),
+    .array(z.string().trim().min(3, "Each rule must be at least 3 characters").max(200, "Each rule must be at most 200 characters"))
+    .min(1, "At least one rule is required"),
 })
 
 export type PlaybookFormValues = z.infer<typeof playbookFormSchema>

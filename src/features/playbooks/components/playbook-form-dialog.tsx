@@ -2,8 +2,9 @@
 
 import { useState, useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, useFieldArray } from "react-hook-form"
 import { useRouter } from "next/navigation"
+import { Plus, Trash2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -42,7 +43,7 @@ type PlaybookFormDialogProps = {
 }
 
 /**
- * Dialog form for creating or editing a playbook.
+ * Dialog form for creating or editing a playbook with checklist rules.
  */
 export function PlaybookFormDialog({
   open,
@@ -60,8 +61,13 @@ export function PlaybookFormDialog({
     defaultValues: defaultValues ?? {
       name: "",
       description: "",
-      rules: "",
+      rules: [],
     },
+  })
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "rules",
   })
 
   const handleOpenChange = (nextOpen: boolean) => {
@@ -70,7 +76,7 @@ export function PlaybookFormDialog({
         defaultValues ?? {
           name: "",
           description: "",
-          rules: "",
+          rules: [],
         }
       )
       setError(null)
@@ -152,23 +158,57 @@ export function PlaybookFormDialog({
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="rules"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Rules</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Detailed checklist and execution criteria"
-                      rows={8}
-                      {...field}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <FormLabel>Rules</FormLabel>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => append("")}
+                >
+                  <Plus className="h-4 w-4" />
+                  Add Rule
+                </Button>
+              </div>
+
+              <div className="space-y-2">
+                {fields.map((field, index) => (
+                  <div key={field.id} className="flex gap-2 items-start">
+                    <FormField
+                      control={form.control}
+                      name={`rules.${index}`}
+                      render={({ field: ruleField }) => (
+                        <FormItem className="flex-1 mb-0">
+                          <FormControl>
+                            <Input
+                              placeholder={`Rule ${index + 1}`}
+                              {...ruleField}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => remove(index)}
+                      className="mt-1"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+              {form.formState.errors.rules && (
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.rules.message ||
+                    "Please add at least one valid rule"}
+                </p>
               )}
-            />
+            </div>
 
             {error ? (
               <p className="text-sm font-medium text-destructive">{error}</p>

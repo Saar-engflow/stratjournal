@@ -40,9 +40,16 @@ export function PlaybookCard({ playbook }: PlaybookCardProps) {
         <CardHeader>
           <div className="flex items-start justify-between gap-3">
             <CardTitle className="text-lg">{playbook.name}</CardTitle>
-            <Badge variant="outline">{stats.tradeCount} trades</Badge>
+            <div className="flex gap-1">
+              <Badge variant="outline">{stats.tradeCount} trades</Badge>
+              <Badge variant="outline">{playbook.rules.length} rules</Badge>
+            </div>
           </div>
-          <CardDescription>{truncateText(playbook.description, 120)}</CardDescription>
+          {playbook.description && (
+            <CardDescription>
+              {truncateText(playbook.description, 120)}
+            </CardDescription>
+          )}
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex flex-wrap gap-2">
