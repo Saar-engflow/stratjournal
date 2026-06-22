@@ -10,7 +10,8 @@ export type PlaybookStats = {
 export type PlaybookListItem = {
   id: string
   name: string
-  description: string
+  description: string | null
+  rules: string[]
   createdAt: Date
   stats: PlaybookStats
 }
@@ -28,8 +29,8 @@ export type PlaybookTradeSummary = {
 export type PlaybookDetail = {
   id: string
   name: string
-  description: string
-  rules: string
+  description: string | null
+  rules: string[]
   createdAt: Date
   updatedAt: Date
   stats: PlaybookStats

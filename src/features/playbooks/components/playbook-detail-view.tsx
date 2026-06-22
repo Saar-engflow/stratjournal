@@ -82,18 +82,27 @@ export function PlaybookDetailView({ playbook }: PlaybookDetailViewProps) {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div>
-              <h3 className="text-sm font-semibold mb-2">Description</h3>
-              <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                {playbook.description}
-              </p>
-            </div>
+            {playbook.description && (
+              <div>
+                <h3 className="text-sm font-semibold mb-2">Description</h3>
+                <p className="text-sm text-muted-foreground">
+                  {playbook.description}
+                </p>
+              </div>
+            )}
             <Separator />
             <div>
-              <h3 className="text-sm font-semibold mb-2">Rules</h3>
-              <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                {playbook.rules}
-              </p>
+              <h3 className="text-sm font-semibold mb-4">Rules</h3>
+              <ul className="space-y-2">
+                {playbook.rules.map((rule, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span className="flex-shrink-0 mt-1 h-4 w-4 border rounded-sm" />
+                    <span className="text-sm text-muted-foreground">
+                      {rule}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </CardContent>
         </Card>
@@ -190,7 +199,7 @@ export function PlaybookDetailView({ playbook }: PlaybookDetailViewProps) {
           playbookId={playbook.id}
           defaultValues={{
             name: playbook.name,
-            description: playbook.description,
+            description: playbook.description || "",
             rules: playbook.rules,
           }}
         />
