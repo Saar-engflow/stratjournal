@@ -16,6 +16,12 @@ import {
 import { cn } from "@/lib/utils"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { UserButton } from "@clerk/nextjs"
+import { AccountSwitcher } from "@/features/accounts/components/account-switcher"
+import {
+  createAccountAction,
+  setActiveAccountAction,
+} from "@/server/accounts/account.actions"
+import type { AccountListItem } from "@/types/account"
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: Home },
@@ -26,7 +32,12 @@ const navItems = [
   { href: "/notebook", label: "Notebook", icon: FileText },
 ]
 
-export function Sidebar() {
+interface SidebarProps {
+  accounts: AccountListItem[]
+  activeAccount: AccountListItem | null
+}
+
+export function Sidebar({ accounts, activeAccount }: SidebarProps) {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(false)
 
@@ -74,6 +85,14 @@ export function Sidebar() {
           })}
         </nav>
         <div className={cn("mt-auto pt-4 space-y-2", isCollapsed ? "flex flex-col items-center" : "")}>
+          {!isCollapsed && (
+            <AccountSwitcher
+              accounts={accounts}
+              activeAccount={activeAccount}
+              onSetActive={setActiveAccountAction}
+              onCreate={createAccountAction}
+            />
+          )}
           <ThemeToggle />
           <UserButton />
         </div>

@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Home, TrendingUp, Calendar, FileText, MoreHorizontal } from "lucide-react"
 import { cn } from "@/lib/utils"
+import type { AccountListItem } from "@/types/account"
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: Home },
@@ -13,10 +14,15 @@ const navItems = [
   { href: "/playbooks", label: "More", icon: MoreHorizontal }, // Overflow menu
 ]
 
+interface BottomNavProps {
+  accounts: AccountListItem[]
+  activeAccount: AccountListItem | null
+}
+
 /**
  * Renders a fixed bottom navigation bar for mobile devices with active route highlighting.
  */
-export function BottomNav() {
+export function BottomNav({ accounts, activeAccount }: BottomNavProps) {
   const pathname = usePathname()
 
   return (

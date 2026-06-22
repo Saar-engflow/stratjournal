@@ -1,15 +1,15 @@
-import type { Metadata } from "next";
-import "@fontsource-variable/manrope";
-import "./globals.css";
-import "@clerk/ui/themes/shadcn.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { ClerkProvider } from "@clerk/nextjs";
-import { shadcn } from "@clerk/ui/themes";
+import type { Metadata } from "next"
+import "@fontsource-variable/manrope"
+import "./globals.css"
+import "@clerk/ui/themes/shadcn.css"
+import { ThemeProvider } from "@/components/theme-provider"
+import { ClerkProvider } from "@clerk/nextjs"
+import { shadcn } from "@clerk/ui/themes"
 
 export const metadata: Metadata = {
   title: "StratJournal",
   description: "Trading journal and strategy manager",
-};
+}
 
 export default function RootLayout({
   children,
@@ -18,6 +18,27 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const theme = localStorage.getItem('theme') || 'system';
+                  const root = document.documentElement;
+                  root.classList.remove('light', 'dark');
+                  
+                  let resolvedTheme = theme;
+                  if (theme === 'system') {
+                    resolvedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                  }
+                  root.classList.add(resolvedTheme);
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className="font-sans antialiased">
         <ClerkProvider
           appearance={{
