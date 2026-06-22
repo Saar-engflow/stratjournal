@@ -79,6 +79,11 @@ export const closeTradeFormSchema = z.object({
     }),
 })
 
+export const tradeNoteFormSchema = z.object({
+  content: z.string().max(10000, "Note cannot exceed 10000 characters").optional().nullable(),
+})
+
 export type TradeFormValues = z.infer<typeof tradeFormSchema>
 export type TradeUpdateFormValues = z.infer<typeof tradeUpdateFormSchema>
 export type CloseTradeFormValues = z.infer<typeof closeTradeFormSchema>
+export type TradeNoteFormValues = z.infer<typeof tradeNoteFormSchema>

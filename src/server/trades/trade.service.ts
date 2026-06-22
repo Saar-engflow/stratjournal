@@ -33,34 +33,87 @@ export async function getTradeForUser(
   userId: string,
   tradeId: string
 ): Promise<TradeDetail | null> {
-  const trade = await prisma.trade.findFirst({
-    where: { id: tradeId, userId },
-    include: {
-      account: { select: { id: true, name: true, currency: true } },
-      playbook: { select: { id: true, name: true } },
-    },
-  })
+  let tradeWithNote: any = null;
 
-  if (!trade) {
-    return null
+  try {
+    tradeWithNote = await prisma.trade.findFirst({
+      where: { id: tradeId, userId },
+      include: {
+        account: { select: { id: true, name: true, currency: true } },
+        playbook: { select: { id: true, name: true } },
+        note: true,
+      },
+    });
+  } catch (e) {
+    // If note table doesn't exist yet, fetch without note
+    tradeWithNote = await prisma.trade.findFirst({
+      where: { id: tradeId, userId },
+      include: {
+        account: { select: { id: true, name: true, currency: true } },
+        playbook: { select: { id: true, name: true } },
+      },
+    });
+  }
+
+  if (!tradeWithNote) {
+    return null;
   }
 
   return {
-    id: trade.id,
-    instrument: trade.instrument,
-    direction: trade.direction,
-    entryPrice: Number(trade.entryPrice),
-    stopLoss: Number(trade.stopLoss),
-    takeProfit: Number(trade.takeProfit),
-    lotSize: Number(trade.lotSize),
-    status: trade.status,
-    profitLoss: trade.profitLoss ? Number(trade.profitLoss) : null,
-    account: trade.account,
-    playbook: trade.playbook,
-    userId: trade.userId,
-    createdAt: trade.createdAt,
-    updatedAt: trade.updatedAt,
-    closedAt: trade.closedAt,
+    id: tradeWithNote.id,
+    instrument: tradeWithNote.instrument,
+    direction: tradeWithNote.direction,
+    entryPrice: Number(tradeWithNote.entryPrice),
+    stopLoss: Number(tradeWithNote.stopLoss),
+    takeProfit: Number(tradeWithNote.takeProfit),
+    lotSize: Number(tradeWithNote.lotSize),
+    status: tradeWithNote.status,
+    profitLoss: tradeWithNote.profitLoss ? Number(tradeWithNote.profitLoss) : null,
+    account: tradeWithNote.account,
+    playbook: tradeWithNote.playbook,
+    note: tradeWithNote.note ? {
+      id: tradeWithNote.note.id,
+      content: tradeWithNote.note.content,
+      createdAt: tradeWithNote.note.createdAt,
+      updatedAt: tradeWithNote.note.updatedAt
+    } : null,
+    userId: tradeWithNote.userId,
+    createdAt: tradeWithNote.createdAt,
+    updatedAt: tradeWithNote.updatedAt,
+    closedAt: tradeWithNote.closedAt,
+  };
+}
+
+export async function upsertTradeNoteForUser(
+  userId: string,
+  tradeId: string,
+  content: string | null
+) {
+  const trade = await prisma.trade.findFirst({
+    where: { id: tradeId, userId },
+  })
+
+  if (!trade) {
+    throw new Error("Trade not found")
+  }
+
+  if (trade.status !== "OPEN") {
+    throw new Error("Cannot edit note for closed trade")
+  }
+
+  try {
+    return await prisma.tradeNote.upsert({
+      where: { tradeId },
+      create: {
+        tradeId,
+        content,
+      },
+      update: {
+        content,
+      },
+    })
+  } catch (e) {
+    throw new Error("Trade notes feature requires database setup. Please run `npx prisma db push` in your terminal.")
   }
 }
 

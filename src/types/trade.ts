@@ -14,6 +14,13 @@ export type TradeListItem = {
   closedAt: Date | null
 }
 
+export type TradeNote = {
+  id: string
+  content: string | null
+  createdAt: Date
+  updatedAt: Date
+}
+
 export type TradeDetail = {
   id: string
   instrument: string
@@ -26,6 +33,7 @@ export type TradeDetail = {
   profitLoss: number | null
   account: { id: string; name: string; currency: string }
   playbook: { id: string; name: string } | null
+  note: TradeNote | null
   userId: string
   createdAt: Date
   updatedAt: Date

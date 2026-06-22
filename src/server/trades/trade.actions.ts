@@ -5,8 +5,8 @@ import { redirect } from "next/navigation"
 
 import { requireUser } from "@/lib/auth"
 
-import { createTradeForUser, updateTradeForUser, closeTradeForUser } from "./trade.service"
-import { tradeFormSchema, tradeUpdateFormSchema, closeTradeFormSchema, type TradeFormValues, type TradeUpdateFormValues, type CloseTradeFormValues } from "./trade.validation"
+import { createTradeForUser, updateTradeForUser, closeTradeForUser, upsertTradeNoteForUser } from "./trade.service"
+import { tradeFormSchema, tradeUpdateFormSchema, closeTradeFormSchema, tradeNoteFormSchema, type TradeFormValues, type TradeUpdateFormValues, type CloseTradeFormValues, type TradeNoteFormValues } from "./trade.validation"
 
 type ActionResult =
   | { success: true; tradeId?: string }
@@ -119,5 +119,34 @@ export async function closeTradeAction(
       return { success: false, error: e.message }
     }
     return { success: false, error: "Failed to close trade" }
+  }
+}
+
+export async function saveTradeNoteAction(
+  tradeId: string,
+  values: TradeNoteFormValues
+): Promise<ActionResult> {
+  try {
+    const user = await requireUser()
+
+    const parsed = tradeNoteFormSchema.safeParse(values)
+
+    if (!parsed.success) {
+      return {
+        success: false,
+        error: parsed.error.issues[0]?.message ?? "Invalid note data",
+      }
+    }
+
+    await upsertTradeNoteForUser(user.id, tradeId, parsed.data.content)
+
+    revalidatePath(`/trades/${tradeId}`)
+
+    return { success: true }
+  } catch (e) {
+    if (e instanceof Error) {
+      return { success: false, error: e.message }
+    }
+    return { success: false, error: "Failed to save note" }
   }
 }

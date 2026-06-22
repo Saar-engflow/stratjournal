@@ -8,9 +8,9 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  clerkId   String    @unique
-  createdAt DateTime  @default(now())
+  id        String     @id @default(cuid())
+  clerkId   String     @unique
+  createdAt DateTime   @default(now())
   accounts  Account[]
   playbooks Playbook[]
   trades    Trade[]
@@ -69,4 +69,14 @@ model Trade {
   user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   account    Account        @relation(fields: [accountId], references: [id], onDelete: Restrict)
   playbook   Playbook?      @relation(fields: [playbookId], references: [id], onDelete: SetNull)
+  note       TradeNote?
+}
+
+model TradeNote {
+  id        String   @id @default(cuid())
+  tradeId   String   @unique
+  content   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  trade     Trade    @relation(fields: [tradeId], references: [id], onDelete: Cascade)
 }

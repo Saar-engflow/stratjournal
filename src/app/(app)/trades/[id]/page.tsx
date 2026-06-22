@@ -4,18 +4,21 @@ import { notFound } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
 import { ArrowLeftIcon } from "lucide-react"
 
 import { requireUser } from "@/lib/auth"
 import { getTradeForUser } from "@/server/trades/trade.service"
+import { TradeNote } from "@/components/trade-note"
 
 export default async function TradeDetailPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   const user = await requireUser()
-  const trade = await getTradeForUser(user.id, params.id)
+  const trade = await getTradeForUser(user.id, id)
 
   if (!trade) {
     notFound()
@@ -108,6 +111,10 @@ export default async function TradeDetailPage({
           </div>
         </CardContent>
       </Card>
+
+      <div className="mt-6">
+        <TradeNote trade={trade} />
+      </div>
     </div>
   )
 }
