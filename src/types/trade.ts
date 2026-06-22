@@ -14,11 +14,19 @@ export type TradeListItem = {
   closedAt: Date | null
 }
 
+export type TradeImage = {
+  id: string
+  url: string
+  pathname: string
+  uploadedAt: Date
+}
+
 export type TradeNote = {
   id: string
   content: string | null
   createdAt: Date
   updatedAt: Date
+  images: TradeImage[]
 }
 
 export type TradeDetail = {

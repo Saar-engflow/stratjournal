@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import { uploadImage, deleteImage } from "@/lib/blob"
 
 import type { TradeListItem, TradeDetail } from "@/types/trade"
 
@@ -41,7 +42,7 @@ export async function getTradeForUser(
       include: {
         account: { select: { id: true, name: true, currency: true } },
         playbook: { select: { id: true, name: true } },
-        note: true,
+        note: { include: { images: true } },
       },
     });
   } catch (e) {
@@ -75,13 +76,97 @@ export async function getTradeForUser(
       id: tradeWithNote.note.id,
       content: tradeWithNote.note.content,
       createdAt: tradeWithNote.note.createdAt,
-      updatedAt: tradeWithNote.note.updatedAt
+      updatedAt: tradeWithNote.note.updatedAt,
+      images: tradeWithNote.note.images || [],
     } : null,
     userId: tradeWithNote.userId,
     createdAt: tradeWithNote.createdAt,
     updatedAt: tradeWithNote.updatedAt,
     closedAt: tradeWithNote.closedAt,
   };
+}
+
+export async function uploadTradeImageForUser(
+  userId: string,
+  tradeId: string,
+  file: File
+) {
+  // Get trade and verify ownership and status
+  const trade = await prisma.trade.findFirst({
+    where: { id: tradeId, userId },
+  })
+
+  if (!trade) {
+    throw new Error("Trade not found")
+  }
+
+  if (trade.status !== "OPEN") {
+    throw new Error("Cannot upload images for closed trade")
+  }
+
+  // Get or create trade note
+  let tradeNote = await prisma.tradeNote.findUnique({
+    where: { tradeId },
+  })
+
+  if (!tradeNote) {
+    tradeNote = await prisma.tradeNote.create({
+      data: {
+      tradeId,
+      content: null,
+      },
+    })
+  }
+
+  // Upload to Vercel Blob
+  const { url, pathname } = await uploadImage(file)
+
+  // Save metadata to DB
+  return prisma.tradeImage.create({
+    data: {
+      tradeNoteId: tradeNote.id,
+      url,
+      pathname,
+    },
+  })
+}
+
+export async function deleteTradeImageForUser(
+  userId: string,
+  tradeId: string,
+  imageId: string
+) {
+  // Get trade and verify ownership and status
+  const trade = await prisma.trade.findFirst({
+    where: { id: tradeId, userId },
+    include: { note: { include: { images: true } },
+  })
+
+  if (!trade) {
+    throw new Error("Trade not found")
+  }
+
+  if (!trade.note) {
+    throw new Error("Trade note not found")
+  }
+
+  if (trade.status !== "OPEN") {
+    throw new Error("Cannot delete images for closed trade")
+  }
+
+  const image = trade.note.images.find((img) => img.id === imageId)
+
+  if (!image) {
+    throw new Error("Image not found")
+  }
+
+  // Delete from Vercel Blob
+  await deleteImage(image.url)
+
+  // Delete from DB
+  return prisma.tradeImage.delete({
+    where: { id: imageId },
+  })
 }
 
 export async function upsertTradeNoteForUser(
