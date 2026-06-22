@@ -7,9 +7,10 @@ import { listPlaybooksForUser } from "@/server/playbooks/playbook.service"
 
 import { TradeForm } from "@/features/trades/components/trade-form"
 
-export default async function EditTradePage({ params }: { params: { id: string } }) {
+export default async function EditTradePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const user = await requireUser()
-  const trade = await getTradeForUser(user.id, params.id)
+  const trade = await getTradeForUser(user.id, id)
 
   if (!trade) {
     notFound()

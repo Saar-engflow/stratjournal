@@ -5,9 +5,10 @@ import { getTradeForUser } from "@/server/trades/trade.service"
 
 import { CloseTradeForm } from "@/features/trades/components/close-trade-form"
 
-export default async function CloseTradePage({ params }: { params: { id: string } }) {
+export default async function CloseTradePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const user = await requireUser()
-  const trade = await getTradeForUser(user.id, params.id)
+  const trade = await getTradeForUser(user.id, id)
 
   if (!trade) {
     notFound()
