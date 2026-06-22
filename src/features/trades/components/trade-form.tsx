@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 import {
   Card,
@@ -29,12 +30,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { ArrowLeftIcon } from "lucide-react"
 
-import { createTradeAction } from "@/server/trades/trade.actions"
-import { tradeFormSchema, type TradeFormValues } from "@/server/trades/trade.validation"
+import { createTradeAction, updateTradeAction } from "@/server/trades/trade.actions"
+import { tradeFormSchema, tradeUpdateFormSchema, type TradeFormValues, type TradeUpdateFormValues } from "@/server/trades/trade.validation"
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import type { TradeDetail } from "@/types/trade"
 
 interface AccountOption {
   id: string
@@ -49,53 +52,80 @@ interface PlaybookOption {
 interface TradeFormProps {
   accounts: AccountOption[]
   playbooks: PlaybookOption[]
+  trade?: TradeDetail
+  isEdit?: boolean
 }
 
-export function TradeForm({ accounts, playbooks }: TradeFormProps) {
+export function TradeForm({ accounts, playbooks, trade, isEdit = false }: TradeFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
 
-  const form = useForm<TradeFormValues>({
-    resolver: zodResolver(tradeFormSchema),
-    defaultValues: {
-      instrument: "",
-      direction: "BUY",
-      entryPrice: "",
-      stopLoss: "",
-      takeProfit: "",
-      lotSize: "",
-      accountId: "",
-      playbookId: null,
-    },
+  const form = useForm<TradeFormValues | TradeUpdateFormValues>({
+    resolver: zodResolver(isEdit ? tradeUpdateFormSchema : tradeFormSchema),
+    defaultValues: trade
+      ? {
+          instrument: trade.instrument,
+          direction: trade.direction,
+          entryPrice: trade.entryPrice.toString(),
+          stopLoss: trade.stopLoss.toString(),
+          takeProfit: trade.takeProfit.toString(),
+          lotSize: trade.lotSize.toString(),
+          accountId: trade.account.id,
+          playbookId: trade.playbook ? trade.playbook.id : null,
+        }
+      : {
+          instrument: "",
+          direction: "BUY",
+          entryPrice: "",
+          stopLoss: "",
+          takeProfit: "",
+          lotSize: "",
+          accountId: "",
+          playbookId: null,
+        },
   })
 
-  function onSubmit(values: TradeFormValues) {
+  function onSubmit(values: TradeFormValues | TradeUpdateFormValues) {
     setError(null)
     startTransition(async () => {
-      const result = await createTradeAction(values)
+      let result
+      if (isEdit && trade) {
+        result = await updateTradeAction(trade.id, values as TradeUpdateFormValues)
+      } else {
+        result = await createTradeAction(values as TradeFormValues)
+      }
 
       if (!result.success) {
         setError(result.error)
         return
       }
 
-      router.push("/trades")
+      router.push(trade ? `/trades/${trade.id}` : "/trades")
     })
   }
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
+      <div className="flex items-center gap-4 mb-8">
+        <Button variant="ghost" size="sm" asChild>
+          <Link href={trade ? `/trades/${trade.id}` : "/trades"}>
+            <ArrowLeftIcon className="w-4 h-4 mr-2" />
+            Back
+          </Link>
+        </Button>
+      </div>
+      
       <Card>
         <CardHeader>
-          <CardTitle>New Trade</CardTitle>
-          <CardDescription>Log a new trade entry</CardDescription>
+          <CardTitle>{isEdit ? "Edit Trade" : "New Trade"}</CardTitle>
+          <CardDescription>{isEdit ? "Update trade details" : "Log a new trade entry"}</CardDescription>
         </CardHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <CardContent className="space-y-6">
               {error && (
-                <div className="p-3 bg-red-50 text-red-900 rounded-md text-sm dark:bg-red-950 dark:text-red-100">
+                <div className="p-3 bg-red-50 text-red-90 rounded-md text-sm dark:bg-red-950 dark:text-red-100">
                   {error}
                 </div>
               )}
@@ -302,9 +332,12 @@ export function TradeForm({ accounts, playbooks }: TradeFormProps) {
               </div>
             </CardContent>
 
-            <CardFooter className="flex justify-end sticky bottom-0 bg-background border-t pt-4">
+            <CardFooter className="flex justify-between sticky bottom-0 bg-background border-t pt-4">
+              <Button variant="ghost" type="button" asChild>
+                <Link href={trade ? `/trades/${trade.id}` : "/trades"}>Cancel</Link>
+              </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? "Creating..." : "Create Trade"}
+                {isPending ? (isEdit ? "Saving..." : "Creating...") : (isEdit ? "Save Changes" : "Create Trade")}
               </Button>
             </CardFooter>
           </form>
