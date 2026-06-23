@@ -87,7 +87,7 @@ export default function RootLayout({
               pageHeaderSubtitle: "text-muted-foreground",
               
               // Form elements
-              formFieldInput: "bg-muted border border-border focus:border-ring",
+              formFieldInput: "bg-muted border border-border focus:border-ring focus:ring-1 focus:ring-ring rounded-md",
               formButtonPrimary: "bg-primary text-primary-foreground hover:bg-primary/90",
               formButtonSecondary: "bg-muted text-foreground hover:bg-muted/80",
               formButtonReset: "bg-muted text-foreground hover:bg-muted/80",
