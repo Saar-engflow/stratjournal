@@ -65,7 +65,7 @@ export function PlaybookFormDialog({
     },
   })
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove } = useFieldArray<PlaybookFormValues>({
     control: form.control,
     name: "rules",
   })
