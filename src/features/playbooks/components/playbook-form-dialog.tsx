@@ -67,8 +67,8 @@ export function PlaybookFormDialog({
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "rules" as const,
-  })
+    name: "rules",
+  } as unknown as any)
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (nextOpen) {

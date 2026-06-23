@@ -138,7 +138,7 @@ export async function saveTradeNoteAction(
       }
     }
 
-    await upsertTradeNoteForUser(user.id, tradeId, parsed.data.content)
+    await upsertTradeNoteForUser(user.id, tradeId, parsed.data.content ?? null)
 
     revalidatePath(`/trades/${tradeId}`)
 

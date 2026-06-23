@@ -1,4 +1,4 @@
-import { put, del, get } from '@vercel/blob'
+import { put, del, getDownloadUrl } from '@vercel/blob'
 
 export async function uploadImage(file: File): Promise<{ url: string; pathname: string }> {
   const result = await put(`trade-images/${file.name}`, file, {
@@ -8,8 +8,8 @@ export async function uploadImage(file: File): Promise<{ url: string; pathname: 
 }
 
 export async function getSignedImageUrl(blobUrl: string): Promise<string> {
-  const result = await get(blobUrl)
-  return result.url
+  const result = await getDownloadUrl(blobUrl)
+  return result
 }
 
 export async function deleteImage(url: string): Promise<void> {

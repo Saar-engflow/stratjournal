@@ -104,7 +104,7 @@ export async function updateAccountForUser(
 /**
  * Deletes an account if it has no trades.
  */
-export async function deleteAccountForUser(userId: string, accountId: string) {
+export async function deleteAccountForUser(userId: string, accountId: string): Promise<{ success: true } | { success: false; error: string }> {
   const account = await prisma.account.findFirst({
     where: { id: accountId, userId },
     include: { trades: { select: { id: true } } },
