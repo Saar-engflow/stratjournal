@@ -8,12 +8,13 @@ datasource db {
 }
 
 model User {
-  id        String     @id @default(cuid())
-  clerkId   String     @unique
-  createdAt DateTime   @default(now())
-  accounts  Account[]
-  playbooks Playbook[]
-  trades    Trade[]
+  id           String           @id @default(cuid())
+  clerkId      String           @unique
+  createdAt    DateTime         @default(now())
+  accounts     Account[]
+  playbooks    Playbook[]
+  trades       Trade[]
+  notebookEntries NotebookEntry[]
 }
 
 model Account {
@@ -73,10 +74,30 @@ model Trade {
 }
 
 model TradeNote {
-  id        String   @id @default(cuid())
-  tradeId   String   @unique
+  id        String        @id @default(cuid())
+  tradeId   String        @unique
   content   String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  trade     Trade         @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+  images    TradeImage[]
+}
+
+model TradeImage {
+  id          String    @id @default(cuid())
+  tradeNoteId String
+  url         String
+  pathname    String
+  uploadedAt  DateTime  @default(now())
+  tradeNote   TradeNote @relation(fields: [tradeNoteId], references: [id], onDelete: Cascade)
+}
+
+model NotebookEntry {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  trade     Trade    @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

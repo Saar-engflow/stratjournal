@@ -9,6 +9,21 @@ import { shadcn } from "@clerk/ui/themes"
 export const metadata: Metadata = {
   title: "StratJournal",
   description: "Trading journal and strategy manager",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "StratJournal",
+  },
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
+  icons: {
+    icon: "/icon-logo.png",
+    apple: "/icons/apple-touch-icon.png",
+    shortcut: "/icon-logo.png",
+  },
 }
 
 export default function RootLayout({
@@ -72,7 +87,7 @@ export default function RootLayout({
               pageHeaderSubtitle: "text-muted-foreground",
               
               // Form elements
-              formFieldInput: "bg-muted border border-border focus:border-ring",
+              formFieldInput: "bg-muted border border-border focus:border-ring focus:ring-1 focus:ring-ring rounded-md",
               formButtonPrimary: "bg-primary text-primary-foreground hover:bg-primary/90",
               formButtonSecondary: "bg-muted text-foreground hover:bg-muted/80",
               formButtonReset: "bg-muted text-foreground hover:bg-muted/80",
