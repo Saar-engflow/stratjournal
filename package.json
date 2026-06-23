@@ -12,6 +12,7 @@
   "dependencies": {
     "@clerk/nextjs": "^7.5.7",
     "@clerk/ui": "^1.20.0",
+    "@ducanh2912/next-pwa": "^10.2.9",
     "@fontsource-variable/manrope": "^5.2.8",
     "@hookform/resolvers": "^5.4.0",
     "@prisma/adapter-pg": "^7.8.0",

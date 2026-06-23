@@ -9,6 +9,21 @@ import { shadcn } from "@clerk/ui/themes"
 export const metadata: Metadata = {
   title: "StratJournal",
   description: "Trading journal and strategy manager",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "StratJournal",
+  },
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/icons/apple-touch-icon.png",
+    shortcut: "/favicon.ico",
+  },
 }
 
 export default function RootLayout({

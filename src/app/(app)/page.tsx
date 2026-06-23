@@ -8,6 +8,7 @@ import { TrendChart } from "@/components/dashboard/trend-chart";
 import { RecentTrades } from "@/components/dashboard/recent-trades";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExportButtons } from "@/features/export/components/export-buttons";
+import { DashboardInstallPrompt } from "@/features/pwa/DashboardInstallPrompt";
 
 export default async function DashboardPage() {
   const user = await requireUser();
@@ -21,11 +22,12 @@ export default async function DashboardPage() {
   const netPlVariant = metrics.netProfitLoss > 0 ? "profit" : metrics.netProfitLoss < 0 ? "loss" : "default";
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 pb-24">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <ExportButtons />
       </div>
+      <DashboardInstallPrompt hasClosedTrades={hasClosedTrades} />
 
       {!hasTrades ? (
         <div className="flex flex-col items-center justify-center py-12 text-center">
