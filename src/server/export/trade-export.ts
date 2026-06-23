@@ -1,8 +1,9 @@
 import { prisma } from '@/lib/prisma';
 import { requireUser } from '@/lib/auth';
 import { generateCSV } from './csv';
+import type { ExportResult } from './export.actions';
 
-export async function exportTrades() {
+export async function exportTrades(): Promise<ExportResult> {
   const user = await requireUser();
   const activeAccount = await prisma.account.findFirst({
     where: { userId: user.id, isActive: true }

@@ -1,8 +1,9 @@
 import { prisma } from '@/lib/prisma';
 import { requireUser } from '@/lib/auth';
 import { generateCSV } from './csv';
+import type { ExportResult } from './export.actions';
 
-export async function exportNotebook() {
+export async function exportNotebook(): Promise<ExportResult> {
   const user = await requireUser();
 
   const entries = await prisma.notebookEntry.findMany({
