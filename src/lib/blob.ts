@@ -1,10 +1,15 @@
-import { put, del } from '@vercel/blob'
+import { put, del, get } from '@vercel/blob'
 
 export async function uploadImage(file: File): Promise<{ url: string; pathname: string }> {
   const result = await put(`trade-images/${file.name}`, file, {
-    access: 'public',
+    access: 'private',
   })
   return { url: result.url, pathname: result.pathname }
+}
+
+export async function getSignedImageUrl(blobUrl: string): Promise<string> {
+  const result = await get(blobUrl)
+  return result.url
 }
 
 export async function deleteImage(url: string): Promise<void> {

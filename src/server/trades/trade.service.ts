@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma"
-import { uploadImage, deleteImage } from "@/lib/blob"
+import { uploadImage, deleteImage, getSignedImageUrl } from "@/lib/blob"
 
 import type { TradeListItem, TradeDetail } from "@/types/trade"
 
@@ -65,6 +65,17 @@ export async function getTradeForUser(
     return null;
   }
 
+  // Get signed URLs for images
+  let imagesWithSignedUrls = []
+  if (tradeWithNote.note?.images) {
+    imagesWithSignedUrls = await Promise.all(
+      tradeWithNote.note.images.map(async (img: any) => ({
+        ...img,
+        url: await getSignedImageUrl(img.url)
+      }))
+    )
+  }
+
   return {
     id: tradeWithNote.id,
     instrument: tradeWithNote.instrument,
@@ -82,7 +93,7 @@ export async function getTradeForUser(
       content: tradeWithNote.note.content,
       createdAt: tradeWithNote.note.createdAt,
       updatedAt: tradeWithNote.note.updatedAt,
-      images: tradeWithNote.note.images || [],
+      images: imagesWithSignedUrls || [],
     } : null,
     userId: tradeWithNote.userId,
     createdAt: tradeWithNote.createdAt,
