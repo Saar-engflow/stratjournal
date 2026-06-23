@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, useFieldArray } from "react-hook-form"
+import { useForm, useFieldArray, type FieldPath, type FieldValues } from "react-hook-form"
 import { useRouter } from "next/navigation"
 import { Plus, Trash2 } from "lucide-react"
 
@@ -65,9 +65,9 @@ export function PlaybookFormDialog({
     },
   })
 
-  const { fields, append, remove } = useFieldArray<PlaybookFormValues>({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "rules",
+    name: "rules" as const,
   })
 
   const handleOpenChange = (nextOpen: boolean) => {
