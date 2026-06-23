@@ -23,7 +23,7 @@ export async function getChartData(userId: string, accountId?: string) {
     const profitLoss = Number(trade.profitLoss ?? 0);
     cumulative += profitLoss;
     return {
-      date: trade.closedAt?.toISOString().split("T")[0],
+      date: trade.closedAt?.toISOString().split("T")[0] ?? new Date().toISOString().split("T")[0],
       profitLoss,
       cumulative,
     };
