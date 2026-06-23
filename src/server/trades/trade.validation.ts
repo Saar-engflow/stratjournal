@@ -80,7 +80,7 @@ export const closeTradeFormSchema = z.object({
 })
 
 export const tradeNoteFormSchema = z.object({
-  content: z.string().max(10000, "Note cannot exceed 10000 characters").optional().nullable(),
+  content: z.string().max(10000, "Note cannot exceed 10000 characters").optional(),
 })
 
 export const tradeImageFormSchema = z.object({
