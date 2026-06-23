@@ -23,7 +23,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="container mx-auto py-8 pb-24">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <ExportButtons />
       </div>
