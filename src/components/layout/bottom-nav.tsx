@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, TrendingUp, Calendar, FileText, MoreHorizontal } from "lucide-react"
+import { Home, TrendingUp, Calendar, FileText, BookOpen } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { AccountListItem } from "@/types/account"
 
@@ -11,7 +11,7 @@ const navItems = [
   { href: "/trades", label: "Trades", icon: TrendingUp },
   { href: "/calendar", label: "Calendar", icon: Calendar },
   { href: "/notebook", label: "Notebook", icon: FileText },
-  { href: "/playbooks", label: "More", icon: MoreHorizontal }, // Overflow menu
+  { href: "/playbooks", label: "Playbooks", icon: BookOpen },
 ]
 
 interface BottomNavProps {
