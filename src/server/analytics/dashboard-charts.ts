@@ -47,6 +47,10 @@ export async function getChartData(userId: string, accountId?: string) {
   }).then((trades) =>
     trades.map((trade) => ({
       ...trade,
+      entryPrice: Number(trade.entryPrice),
+      stopLoss: Number(trade.stopLoss),
+      takeProfit: Number(trade.takeProfit),
+      lotSize: Number(trade.lotSize),
       profitLoss: trade.profitLoss !== null ? Number(trade.profitLoss) : null,
     }))
   );
