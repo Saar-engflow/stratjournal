@@ -46,7 +46,10 @@ export function AccountFormDialog({ trigger, account, onSuccess, onSubmit }: Acc
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
     defaultValues: account
-      ? { name: account.name, currency: account.currency }
+      ? { 
+          name: account.name, 
+          currency: account.currency as "USD" | "EUR" | "GBP" | "AUD" | "ZAR" | "Other" 
+        }
       : { name: "", currency: "USD" },
   })
 
