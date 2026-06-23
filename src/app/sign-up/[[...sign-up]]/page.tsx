@@ -11,19 +11,6 @@ export default function SignUpPage() {
       alternateLinkText="Already have an account?"
       alternateLinkHref="/sign-in"
     >
-      <style>{`
-        .cl-socialButtonsBlockButton__appleIcon,
-        .cl-socialButtonsIconButton__appleIcon,
-        .cl-socialButtonsIconButton__icon,
-        .cl-socialButtonsBlockButton__icon {
-          display: inline-flex !important;
-          opacity: 1 !important;
-          visibility: visible !important;
-          color: inherit !important;
-          width: 20px !important;
-          height: 20px !important;
-        }
-      `}</style>
       <SignUp
         appearance={{
           elements: {
@@ -41,7 +28,7 @@ export default function SignUpPage() {
             dividerText: 'text-muted-foreground font-medium',
             formField: 'mb-4',
             formFieldLabel: 'text-sm font-medium text-foreground mb-1.5',
-            formFieldInput: 'h-12 bg-muted/50 border border-border/60 shadow-sm focus:ring-2 focus:ring-[#16A34A] focus:ring-offset-0 rounded-md text-sm',
+            formFieldInput: 'h-12 bg-muted border border-input focus:ring-2 focus:ring-ring focus:border-input rounded-md text-sm shadow-sm',
             formButtonPrimary: 'h-12 bg-[#16A34A] hover:bg-[#15803D] text-white font-medium shadow-md hover:shadow-lg transition-all rounded-md mt-2',
             formButtonReset: 'shadow-sm',
             footer: 'hidden',
