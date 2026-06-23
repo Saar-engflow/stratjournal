@@ -2,7 +2,7 @@ import { put, del } from '@vercel/blob'
 
 export async function uploadImage(file: File): Promise<{ url: string; pathname: string }> {
   const result = await put(`trade-images/${file.name}`, file, {
-    access: 'private',
+    access: 'public',
   })
   return { url: result.url, pathname: result.pathname }
 }
