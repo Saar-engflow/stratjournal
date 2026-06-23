@@ -1,4 +1,5 @@
 import { requireUser } from "@/lib/auth";
+import { getActiveAccountForUser } from "@/server/accounts/account.service";
 import { getDashboardMetrics } from "@/server/analytics/dashboard-metrics";
 import { getChartData } from "@/server/analytics/dashboard-charts";
 import { KpiCard } from "@/components/dashboard/kpi-card";
@@ -9,8 +10,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function DashboardPage() {
   const user = await requireUser();
-  const metrics = await getDashboardMetrics(user.id);
-  const chartData = await getChartData(user.id);
+  const activeAccount = await getActiveAccountForUser(user.id);
+  const metrics = await getDashboardMetrics(user.id, activeAccount?.id);
+  const chartData = await getChartData(user.id, activeAccount?.id);
 
   const hasTrades = metrics.totalTrades > 0;
   const hasClosedTrades = metrics.closedTrades > 0;

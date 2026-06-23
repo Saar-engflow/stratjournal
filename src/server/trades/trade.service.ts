@@ -3,9 +3,14 @@ import { uploadImage, deleteImage } from "@/lib/blob"
 
 import type { TradeListItem, TradeDetail } from "@/types/trade"
 
-export async function listTradesForUser(userId: string): Promise<TradeListItem[]> {
+export async function listTradesForUser(userId: string, accountId?: string): Promise<TradeListItem[]> {
+  const where: any = { userId };
+  if (accountId) {
+    where.accountId = accountId;
+  }
+  
   const trades = await prisma.trade.findMany({
-    where: { userId },
+    where,
     include: {
       account: { select: { id: true, name: true } },
       playbook: { select: { id: true, name: true } },

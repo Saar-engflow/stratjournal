@@ -116,12 +116,12 @@ export function CalendarGrid({ daysData, initialMonth, initialYear }: CalendarGr
       </div>
 
       {/* Calendar grid */}
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7">
         {/* Weekday headers */}
         {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
           <div
             key={day}
-            className="text-center text-sm font-medium text-muted-foreground py-2"
+            className="text-center text-sm font-medium text-muted-foreground py-2 border border-gray-200 dark:border-gray-700"
           >
             {day}
           </div>

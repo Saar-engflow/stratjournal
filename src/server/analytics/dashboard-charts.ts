@@ -1,8 +1,13 @@
 import { prisma } from "@/lib/prisma";
 
-export async function getChartData(userId: string) {
+export async function getChartData(userId: string, accountId?: string) {
+  const where: any = { userId };
+  if (accountId) {
+    where.accountId = accountId;
+  }
+  
   const closedTrades = await prisma.trade.findMany({
-    where: { userId, status: "CLOSED" },
+    where: { ...where, status: "CLOSED" },
     select: {
       id: true,
       instrument: true,
@@ -32,7 +37,7 @@ export async function getChartData(userId: string) {
   ];
 
   const recentTrades = await prisma.trade.findMany({
-    where: { userId },
+    where,
     orderBy: { createdAt: "desc" },
     take: 10,
     include: {

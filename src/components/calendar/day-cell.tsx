@@ -38,7 +38,7 @@ export function DayCell({
   return (
     <Button
       variant="ghost"
-      className={`flex flex-col items-center justify-start p-2 h-24 w-full ${bgColor} hover:opacity-80`}
+      className={`flex flex-col items-center justify-start p-2 h-24 w-full ${bgColor} border border-gray-200 dark:border-gray-700 hover:opacity-80`}
       onClick={onClick}
     >
       <span className={`text-sm font-medium ${textColor}`}>{day}</span>

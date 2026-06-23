@@ -1,14 +1,19 @@
 import { prisma } from "@/lib/prisma";
 
-export async function getCalendarData(userId: string, month: number, year: number) {
+export async function getCalendarData(userId: string, month: number, year: number, accountId?: string) {
   // Get start and end of the month
   const startDate = new Date(year, month, 1);
   const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
 
+  const where: any = { userId };
+  if (accountId) {
+    where.accountId = accountId;
+  }
+
   // Fetch all trades and notes for the month
   const trades = await prisma.trade.findMany({
     where: {
-      userId,
+      ...where,
       OR: [
         { closedAt: { gte: startDate, lte: endDate } },
         { createdAt: { gte: startDate, lte: endDate } },

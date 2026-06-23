@@ -1,8 +1,13 @@
 import { prisma } from "@/lib/prisma";
 
-export async function getDashboardMetrics(userId: string) {
+export async function getDashboardMetrics(userId: string, accountId?: string) {
+  const where: any = { userId };
+  if (accountId) {
+    where.accountId = accountId;
+  }
+  
   const trades = await prisma.trade.findMany({
-    where: { userId },
+    where,
     select: {
       status: true,
       profitLoss: true,
