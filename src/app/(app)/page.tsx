@@ -7,6 +7,7 @@ import { PerformanceChart } from "@/components/dashboard/performance-chart";
 import { TrendChart } from "@/components/dashboard/trend-chart";
 import { RecentTrades } from "@/components/dashboard/recent-trades";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ExportButtons } from "@/features/export/components/export-buttons";
 
 export default async function DashboardPage() {
   const user = await requireUser();
@@ -21,7 +22,10 @@ export default async function DashboardPage() {
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <ExportButtons />
+      </div>
 
       {!hasTrades ? (
         <div className="flex flex-col items-center justify-center py-12 text-center">
