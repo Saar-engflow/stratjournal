@@ -28,10 +28,28 @@ export async function listAccountsForUser(userId: string): Promise<AccountListIt
 /**
  * Returns the active account for the user.
  */
-export async function getActiveAccountForUser(userId: string) {
-  return prisma.account.findFirst({
+export async function getActiveAccountForUser(userId: string): Promise<AccountListItem | null> {
+  const account = await prisma.account.findFirst({
     where: { userId, isActive: true },
+    include: {
+      trades: {
+        select: { id: true },
+      },
+    },
   })
+  
+  if (!account) {
+    return null
+  }
+  
+  return {
+    id: account.id,
+    name: account.name,
+    currency: account.currency,
+    isActive: account.isActive,
+    createdAt: account.createdAt,
+    hasTrades: account.trades.length > 0,
+  }
 }
 
 /**
