@@ -65,6 +65,10 @@ export async function getCalendarData(userId: string, month: number, year: numbe
     hasNotes: data.hasNotes,
     trades: data.trades.map((trade) => ({
       ...trade,
+      entryPrice: Number(trade.entryPrice),
+      stopLoss: Number(trade.stopLoss),
+      takeProfit: Number(trade.takeProfit),
+      lotSize: Number(trade.lotSize),
       profitLoss: trade.profitLoss !== null ? Number(trade.profitLoss) : null,
     })),
     notes: data.trades

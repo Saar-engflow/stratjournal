@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Pencil } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { ArrowLeft, Pencil, Plus } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -14,6 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { Checkbox } from "@/components/ui/checkbox"
 import { PlaybookDeleteDialog } from "@/features/playbooks/components/playbook-delete-dialog"
 import { PlaybookFormDialog } from "@/features/playbooks/components/playbook-form-dialog"
 import {
@@ -31,7 +33,11 @@ type PlaybookDetailViewProps = {
  * Client view for playbook detail with edit and delete actions.
  */
 export function PlaybookDetailView({ playbook }: PlaybookDetailViewProps) {
+  const router = useRouter()
   const [editOpen, setEditOpen] = useState(false)
+  const [checkedRules, setCheckedRules] = useState<boolean[]>(
+    playbook.rules.map(() => false)
+  )
   const { stats } = playbook
 
   const pnlClass =
@@ -40,6 +46,18 @@ export function PlaybookDetailView({ playbook }: PlaybookDetailViewProps) {
       : stats.netProfitLoss < 0
         ? "text-red-600 dark:text-red-400"
         : "text-muted-foreground"
+
+  const allRulesChecked = checkedRules.every(Boolean)
+
+  function toggleRule(index: number) {
+    const newChecked = [...checkedRules]
+    newChecked[index] = !newChecked[index]
+    setCheckedRules(newChecked)
+  }
+
+  function createTrade() {
+    router.push(`/trades/new?playbookId=${playbook.id}`)
+  }
 
   return (
     <div className="space-y-6">
@@ -75,11 +93,19 @@ export function PlaybookDetailView({ playbook }: PlaybookDetailViewProps) {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-xl">Strategy Information</CardTitle>
-            <CardDescription>
-              Reference details for this trading strategy.
-            </CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle className="text-xl">Strategy Information</CardTitle>
+              <CardDescription>
+                Reference details for this trading strategy.
+              </CardDescription>
+            </div>
+            {allRulesChecked && playbook.rules.length > 0 && (
+              <Button onClick={createTrade} className="flex items-center gap-2">
+                <Plus className="h-4 w-4" />
+                Create Trade
+              </Button>
+            )}
           </CardHeader>
           <CardContent className="space-y-6">
             {playbook.description && (
@@ -92,17 +118,38 @@ export function PlaybookDetailView({ playbook }: PlaybookDetailViewProps) {
             )}
             <Separator />
             <div>
-              <h3 className="text-sm font-semibold mb-4">Rules</h3>
-              <ul className="space-y-2">
-                {playbook.rules.map((rule, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="flex-shrink-0 mt-1 h-4 w-4 border rounded-sm" />
-                    <span className="text-sm text-muted-foreground">
-                      {rule}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              <h3 className="text-sm font-semibold mb-4">
+                Rules
+                {playbook.rules.length > 0 && (
+                  <span className="font-normal text-muted-foreground ml-2">
+                    ({checkedRules.filter(Boolean).length}/{playbook.rules.length} checked)
+                  </span>
+                )}
+              </h3>
+              {playbook.rules.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  No rules added yet.
+                </p>
+              ) : (
+                <ul className="space-y-3">
+                  {playbook.rules.map((rule, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <Checkbox
+                        id={`rule-${index}`}
+                        checked={checkedRules[index]}
+                        onCheckedChange={() => toggleRule(index)}
+                        className="mt-1"
+                      />
+                      <label
+                        htmlFor={`rule-${index}`}
+                        className="text-sm leading-tight cursor-pointer"
+                      >
+                        {rule}
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </CardContent>
         </Card>

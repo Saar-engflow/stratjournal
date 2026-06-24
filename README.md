@@ -42,7 +42,7 @@ A free, web-based trading journal designed to help traders accurately record, or
 ### Prerequisites
 
 - Node.js 18+
-- PostgreSQL database
+- PostgreSQL database (local or cloud-hosted)
 - Clerk account (for authentication)
 - Vercel account (for Blob Storage and optional deployment)
 
@@ -50,7 +50,7 @@ A free, web-based trading journal designed to help traders accurately record, or
 
 1. **Clone the repository**
 ```bash
-git clone &lt;repository-url&gt;
+git clone <repository-url>
 cd stratjournal
 ```
 
@@ -61,31 +61,67 @@ npm install
 
 3. **Set up environment variables**
 
-Create a `.env.local` file in the root directory with the following variables:
+Copy `.env.example` to `.env.local`:
+```bash
+# If you're on Windows PowerShell
+Copy-Item .env.example .env.local
 
-```env
-# Clerk Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
-CLERK_SECRET_KEY=your_clerk_secret_key
-
-# Database
-DATABASE_URL=postgresql://user:password@localhost:5432/stratjournal
-
-# Vercel Blob Storage
-BLOB_READ_WRITE_TOKEN=your_vercel_blob_token
+# If you're on macOS/Linux
+cp .env.example .env.local
 ```
 
-4. **Generate Prisma Client**
+Then fill in the values in `.env.local`:
+
+```env
+# Clerk Authentication - Get from https://dashboard.clerk.com/
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_publishable_key_here
+CLERK_SECRET_KEY=sk_test_your_secret_key_here
+
+# Clerk URLs
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
+
+# Database URL
+# Options:
+# 1. Local PostgreSQL: postgresql://user:password@localhost:5432/stratjournal
+# 2. Vercel Postgres: Copy from Vercel dashboard
+# 3. Supabase: Copy from Supabase dashboard
+DATABASE_URL=postgresql://user:password@localhost:5432/stratjournal
+
+# Vercel Blob Storage - Get from https://vercel.com/dashboard/stores
+BLOB_READ_WRITE_TOKEN=vercel_blob_token_here
+```
+
+4. **Set up your database**
+
+Option A - Local PostgreSQL:
+- Install PostgreSQL on your machine
+- Create a new database called `stratjournal`
+- Update `DATABASE_URL` in `.env.local` with your PostgreSQL credentials
+
+Option B - Vercel Postgres (Recommended):
+- Go to https://vercel.com/dashboard/stores
+- Create a new Postgres database
+- Copy the connection string and paste it as `DATABASE_URL` in `.env.local`
+
+Option C - Supabase:
+- Go to https://supabase.com
+- Create a new project
+- In project settings, copy the connection string and use it as `DATABASE_URL`
+
+5. **Generate Prisma Client**
 ```bash
 npx prisma generate
 ```
 
-5. **Run database migrations**
+6. **Run database migrations**
 ```bash
 npx prisma migrate dev
 ```
 
-6. **Start development server**
+7. **Start development server**
 ```bash
 npm run dev
 ```
