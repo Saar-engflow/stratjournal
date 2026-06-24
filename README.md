@@ -3,6 +3,17 @@
 
 A free, web-based trading journal designed to help traders accurately record, organize, and review their trading activity. StratJournal focuses on structured trade tracking, playbook adherence, trade notes, and performance analysis rather than trade coaching or automation.
 
+
+### Screenshots
+
+| Screenshot | Description |
+|------------|-------------|
+| ![dashboard](public/SJ-1.png) | **Dashboard Overview** - View your total trades, win rate, net profit/loss, and performance charts at a glance |
+| ![dashboard dark mode](public/SJ-2.png) | **Dark Mode** - Enjoy the app in dark mode for comfortable night trading |
+| ![calender](public/SJ-3.png) | **Calendar View** - See your trading activity and results day-by-day |
+| ![playbook](public/SJ-4.png) | **Playbook Management** - Follow your trading rules strictly before placing trades |
+| ![trade form](public/SJ-5.png) | **Trade Logging** - Manually log your trades with all relevant details |
+
 ## Key Features
 
 ### Core Functionality
@@ -19,6 +30,8 @@ A free, web-based trading journal designed to help traders accurately record, or
 - ✅ **Progressive Web App (PWA)**: Installable on desktop and mobile devices
 - ✅ **Light & Dark Mode**: Switch between themes
 - ✅ **Mobile Responsive**: Works great on phones and tablets
+
+
 
 ## Tech Stack
 
