@@ -54,9 +54,10 @@ interface TradeFormProps {
   playbooks: PlaybookOption[]
   trade?: TradeDetail
   isEdit?: boolean
+  preSelectedPlaybookId?: string
 }
 
-export function TradeForm({ accounts, playbooks, trade, isEdit = false }: TradeFormProps) {
+export function TradeForm({ accounts, playbooks, trade, isEdit = false, preSelectedPlaybookId }: TradeFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
@@ -82,7 +83,7 @@ export function TradeForm({ accounts, playbooks, trade, isEdit = false }: TradeF
           takeProfit: "",
           lotSize: "",
           accountId: "",
-          playbookId: null,
+          playbookId: preSelectedPlaybookId || null,
         },
   })
 
@@ -243,7 +244,7 @@ export function TradeForm({ accounts, playbooks, trade, isEdit = false }: TradeF
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="entryPrice">Entry Price *</Label>
+                  <Label htmlFor="entryPrice">Entry Price (in pips) *</Label>
                   <FormField
                     control={form.control}
                     name="entryPrice"
