@@ -114,6 +114,19 @@ Update this file after every meaningful implementation change.
 - Fixed type mismatch in trade actions:
   - Converted `undefined` to `null` when passing content to upsertTradeNoteForUser in trade.actions.ts
   - Build passes without errors
+- Implemented performance optimizations from context/performance-audit.md:
+  - Phase 6: Added database indexes to Prisma schema (foreign keys, commonly filtered fields like userId, accountId, playbookId, tradeId, tradeNoteId, status, closedAt, createdAt, isActive)
+  - Phase 7: Optimized dashboard page to use Promise.all for parallel data fetching of metrics and chartData
+  - Build passes successfully
+- Optimized requireUser() / getCurrentUser() authentication helper (src/lib/auth.ts):
+  - Replaced prisma.user.upsert() (which does empty update on every authenticated request) with:
+    1. First prisma.user.findUnique() (read-only query)
+    2. prisma.user.create() only when user doesn't exist in DB
+  - Eliminates unnecessary write operations on every request
+  - Reduces database load and connection pool usage
+  - Preserves all existing behavior (Clerk integration, user IDs, relations, auth flow)
+  - Updated context/performance-audit.md with new database query counts and audit table
+  - Build passes successfully
   - Build passes successfully
 - Unit 6 — Trade Management completed successfully:
   - Added getTradeForUser, updateTradeForUser, closeTradeForUser to trade service
@@ -139,3 +152,16 @@ Update this file after every meaningful implementation change.
 - Fixed type mismatch in trade actions:
   - Converted `undefined` to `null` when passing content to upsertTradeNoteForUser in trade.actions.ts
   - Build passes without errors
+- Implemented performance optimizations from context/performance-audit.md:
+  - Phase 6: Added database indexes to Prisma schema (foreign keys, commonly filtered fields like userId, accountId, playbookId, tradeId, tradeNoteId, status, closedAt, createdAt, isActive)
+  - Phase 7: Optimized dashboard page to use Promise.all for parallel data fetching of metrics and chartData
+  - Build passes successfully
+- Optimized requireUser() / getCurrentUser() authentication helper (src/lib/auth.ts):
+  - Replaced prisma.user.upsert() (which does empty update on every authenticated request) with:
+    1. First prisma.user.findUnique() (read-only query)
+    2. prisma.user.create() only when user doesn't exist in DB
+  - Eliminates unnecessary write operations on every request
+  - Reduces database load and connection pool usage
+  - Preserves all existing behavior (Clerk integration, user IDs, relations, auth flow)
+  - Updated context/performance-audit.md with new database query counts and audit table
+  - Build passes successfully

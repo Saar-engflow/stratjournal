@@ -13,11 +13,19 @@ export async function getCurrentUser() {
     return null
   }
 
-  return prisma.user.upsert({
+  // First, try to find the user (read-only)
+  let user = await prisma.user.findUnique({
     where: { clerkId },
-    update: {},
-    create: { clerkId },
   })
+
+  // If user doesn't exist, create them (only write when necessary)
+  if (!user) {
+    user = await prisma.user.create({
+      data: { clerkId },
+    })
+  }
+
+  return user
 }
 
 /**

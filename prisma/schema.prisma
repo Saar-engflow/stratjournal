@@ -27,6 +27,9 @@ model Account {
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   trades    Trade[]
+
+  @@index([userId])
+  @@index([userId, isActive])
 }
 
 model Playbook {
@@ -39,6 +42,8 @@ model Playbook {
   updatedAt   DateTime @updatedAt
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   trades      Trade[]
+
+  @@index([userId])
 }
 
 enum TradeStatus {
@@ -71,6 +76,12 @@ model Trade {
   account    Account        @relation(fields: [accountId], references: [id], onDelete: Restrict)
   playbook   Playbook?      @relation(fields: [playbookId], references: [id], onDelete: SetNull)
   note       TradeNote?
+
+  @@index([userId])
+  @@index([userId, accountId])
+  @@index([userId, status])
+  @@index([userId, closedAt])
+  @@index([userId, createdAt])
 }
 
 model TradeNote {
@@ -81,6 +92,8 @@ model TradeNote {
   updatedAt DateTime      @updatedAt
   trade     Trade         @relation(fields: [tradeId], references: [id], onDelete: Cascade)
   images    TradeImage[]
+
+  @@index([tradeId])
 }
 
 model TradeImage {
@@ -90,6 +103,8 @@ model TradeImage {
   pathname    String
   uploadedAt  DateTime  @default(now())
   tradeNote   TradeNote @relation(fields: [tradeNoteId], references: [id], onDelete: Cascade)
+
+  @@index([tradeNoteId])
 }
 
 model NotebookEntry {
@@ -100,4 +115,6 @@ model NotebookEntry {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

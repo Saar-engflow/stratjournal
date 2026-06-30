@@ -13,8 +13,10 @@ import { DashboardInstallPrompt } from "@/features/pwa/DashboardInstallPrompt";
 export default async function DashboardPage() {
   const user = await requireUser();
   const activeAccount = await getActiveAccountForUser(user.id);
-  const metrics = await getDashboardMetrics(user.id, activeAccount?.id);
-  const chartData = await getChartData(user.id, activeAccount?.id);
+  const [metrics, chartData] = await Promise.all([
+    getDashboardMetrics(user.id, activeAccount?.id),
+    getChartData(user.id, activeAccount?.id),
+  ]);
 
   const hasTrades = metrics.totalTrades > 0;
   const hasClosedTrades = metrics.closedTrades > 0;
