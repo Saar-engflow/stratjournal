@@ -1,24 +1,14 @@
 import { prisma } from "@/lib/prisma";
 
-export async function getCalendarData(userId: string, month: number, year: number, accountId?: string) {
-  // Get start and end of the month
-  const startDate = new Date(year, month, 1);
-  const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
-
+export async function getCalendarData(userId: string, accountId?: string) {
   const where: any = { userId };
   if (accountId) {
     where.accountId = accountId;
   }
 
-  // Fetch all trades and notes for the month
+  // Fetch ALL trades and notes (no date filter)
   const trades = await prisma.trade.findMany({
-    where: {
-      ...where,
-      OR: [
-        { closedAt: { gte: startDate, lte: endDate } },
-        { createdAt: { gte: startDate, lte: endDate } },
-      ],
-    },
+    where,
     include: { note: true },
     orderBy: { createdAt: "desc" },
   });
@@ -31,10 +21,18 @@ export async function getCalendarData(userId: string, month: number, year: numbe
     trades: typeof trades;
   }>();
 
+  // Helper to get local date key in YYYY-MM-DD format
+  const getLocalDateKey = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   for (const trade of trades) {
     const dateKey = trade.closedAt
-      ? trade.closedAt.toISOString().split("T")[0]
-      : trade.createdAt.toISOString().split("T")[0];
+      ? getLocalDateKey(trade.closedAt)
+      : getLocalDateKey(trade.createdAt);
 
     const existing = dayMap.get(dateKey) || {
       profitLoss: 0,
