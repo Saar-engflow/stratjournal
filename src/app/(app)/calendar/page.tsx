@@ -9,7 +9,7 @@ export default async function CalendarPage() {
   const now = new Date();
   const initialMonth = now.getMonth();
   const initialYear = now.getFullYear();
-  const calendarData = await getCalendarData(user.id, initialMonth, initialYear, activeAccount?.id);
+  const calendarData = await getCalendarData(user.id, activeAccount?.id);
 
   return (
     <div className="container mx-auto py-8">
