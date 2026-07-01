@@ -34,6 +34,14 @@ export function CalendarGrid({ daysData, initialMonth, initialYear }: CalendarGr
     return map;
   }, [daysData]);
 
+  // Helper to get local date key in YYYY-MM-DD format
+  const getLocalDateKey = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   // Generate calendar days
   const calendarDays = useMemo(() => {
     const firstDay = new Date(year, month, 1);
@@ -53,7 +61,7 @@ export function CalendarGrid({ daysData, initialMonth, initialYear }: CalendarGr
     for (let i = 0; i < weeks * 7; i++) {
       const date = new Date(year, month, i - adjustedStartPadding + 1);
       const isCurrentMonth = date.getMonth() === month && date.getFullYear() === year;
-      const dateKey = date.toISOString().split("T")[0];
+      const dateKey = getLocalDateKey(date);
       const data = dayMap.get(dateKey);
 
       days.push({

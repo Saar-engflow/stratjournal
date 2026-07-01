@@ -8,7 +8,7 @@ export async function listTradesForUser(userId: string, accountId?: string): Pro
   if (accountId) {
     where.accountId = accountId;
   }
-  
+
   const trades = await prisma.trade.findMany({
     where,
     include: {
@@ -16,7 +16,7 @@ export async function listTradesForUser(userId: string, accountId?: string): Pro
       playbook: { select: { id: true, name: true } },
     },
     orderBy: { createdAt: "desc" },
-  })
+  });
 
   return trades.map((trade) => ({
     id: trade.id,
